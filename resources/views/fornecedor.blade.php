@@ -14,7 +14,7 @@
                                 {{ session('status') }}
                             </div>
                         @endif
-                            <form role="form" method="POST" action="{{ url('/inserir/empresa') }}">
+                            <form role="form" method="POST" action="{{ url('/inserir/fornecedor') }}">
                                 <input type="hidden" value="{{csrf_token()}}" name="_token" />
                                 <div class="form-group">
                                     <label>CNPJ:</label>

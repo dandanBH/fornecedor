@@ -22,7 +22,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/fornecedor', 'FornecedorController@index')->name('fornecedor')->middleware('auth');
 
-
+Route::post('/inserir/fornecedor','FornecedorController@store')->name('fornecedor')->middleware('auth');;
 /*Rota protegida
     Route::get('rota_protegida','AlgunControlador@metodo')->middleware('auth');
 */

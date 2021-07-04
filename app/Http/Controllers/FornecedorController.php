@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Fornecedor;
 use Illuminate\Http\Request;
+use Http;
 
 class FornecedorController extends Controller
 {
@@ -38,7 +39,18 @@ class FornecedorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $fornecedor = new Fornecedor();
+        $fornecedor->cnpj = $request->cnpj;
+        $response = Http::get('https://www.receitaws.com.br/v1/cnpj/'.$fornecedor->cnpj);
+        $dados = $response->json();
+        $fornecedor->razao_social = $dados['nome'];
+        $fornecedor->atividade_principal = $dados['atividade_principal'][0]['text'];
+        $fornecedor->save();
+
+        return redirect('/fornecedor')->with('success', 'Cadastrado');
+
+
+        //dd($dados['atividade_principal'][0]['text']);
     }
 
     /**
