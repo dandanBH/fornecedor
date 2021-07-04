@@ -16,7 +16,7 @@ class FornecedorController extends Controller
     {
         $fornecedores = Fornecedor::latest()->paginate(10);
        // dd($fornecedor);
-        return view('home',compact('fornecedores'));
+        return view('fornecedor',compact('fornecedores'));
         //return view('listar',compact('pessoas'));
     }
 

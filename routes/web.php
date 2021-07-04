@@ -20,7 +20,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
 Route::get('/fornecedor', 'FornecedorController@index')->name('fornecedor')->middleware('auth');
 
 
