@@ -41,7 +41,7 @@ class FornecedorController extends Controller
     {
         $user = Auth::id();
         $fornecedor = new Fornecedor();
-        $fornecedor->cnpj = $request->cnpj;
+        $fornecedor->cnpj = preg_replace('/[^0-9]/', '', $request->cnpj);
         $response = Http::get('https://www.receitaws.com.br/v1/cnpj/' . $fornecedor->cnpj);
         $dados = $response->json();
 
