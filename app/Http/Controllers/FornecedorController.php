@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Fornecedor;
 use Illuminate\Http\Request;
 use Http;
+use Illuminate\Support\Facades\Auth;
 
 class FornecedorController extends Controller
 {
@@ -15,8 +16,10 @@ class FornecedorController extends Controller
      */
     public function index()
     {
-        $fornecedores = Fornecedor::latest()->paginate(10);
+        //$fornecedores = Fornecedor::latest()->paginate(10);
        // dd($fornecedor);
+        $user = Auth::id();
+        $fornecedores = Fornecedor::where('id_usuario',$user)->get();
         return view('fornecedor',compact('fornecedores'));
         //return view('listar',compact('pessoas'));
     }
@@ -39,10 +42,14 @@ class FornecedorController extends Controller
      */
     public function store(Request $request)
     {
+        //$user = Auth::user(); dados do usuario
+        $user = Auth::id();
+
         $fornecedor = new Fornecedor();
         $fornecedor->cnpj = $request->cnpj;
         $response = Http::get('https://www.receitaws.com.br/v1/cnpj/'.$fornecedor->cnpj);
         $dados = $response->json();
+        $fornecedor->id_usuario = $user;
         $fornecedor->razao_social = $dados['nome'];
         $fornecedor->atividade_principal = $dados['atividade_principal'][0]['text'];
         $fornecedor->save();
@@ -50,7 +57,6 @@ class FornecedorController extends Controller
         return redirect('/fornecedor')->with('success', 'Cadastrado');
 
 
-        //dd($dados['atividade_principal'][0]['text']);
     }
 
     /**

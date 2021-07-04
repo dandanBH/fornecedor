@@ -36,4 +36,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /*public function fornecedores(){
+        return $this->hasMany(Fornecedor::class,'id_usuario','id');
+    }*/
+
 }

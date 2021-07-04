@@ -15,10 +15,15 @@ class CreateFornecedorTable extends Migration
     {
         Schema::create('fornecedores', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_usuario');
             $table->string('razao_social');
             $table->string('cnpj',14);
             $table->string('atividade_principal')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('fornecedores',function (Blueprint $table){
+           $table->foreign('id_usuario')->references('id')->on('users');
         });
     }
 
