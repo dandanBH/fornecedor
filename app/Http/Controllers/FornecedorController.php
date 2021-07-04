@@ -16,12 +16,9 @@ class FornecedorController extends Controller
      */
     public function index()
     {
-        //$fornecedores = Fornecedor::latest()->paginate(10);
-       // dd($fornecedor);
         $user = Auth::id();
-        $fornecedores = Fornecedor::where('id_usuario',$user)->get();
-        return view('fornecedor',compact('fornecedores'));
-        //return view('listar',compact('pessoas'));
+        $fornecedores = Fornecedor::where('id_usuario', $user)->orderBy('id', 'desc')->get();
+        return view('fornecedor', compact('fornecedores'));
     }
 
     /**
@@ -37,32 +34,34 @@ class FornecedorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //$user = Auth::user(); dados do usuario
         $user = Auth::id();
-
         $fornecedor = new Fornecedor();
         $fornecedor->cnpj = $request->cnpj;
-        $response = Http::get('https://www.receitaws.com.br/v1/cnpj/'.$fornecedor->cnpj);
+        $response = Http::get('https://www.receitaws.com.br/v1/cnpj/' . $fornecedor->cnpj);
         $dados = $response->json();
-        $fornecedor->id_usuario = $user;
-        $fornecedor->razao_social = $dados['nome'];
-        $fornecedor->atividade_principal = $dados['atividade_principal'][0]['text'];
-        $fornecedor->save();
 
-        return redirect('/fornecedor')->with('success', 'Cadastrado');
-
-
+        if (isset($dados['message'])){
+            return redirect()->back()->with('erroMensagem', $dados['message']);
+        }else if ($response->getStatusCode() != 200){
+            return redirect()->back()->with('erroAPI', $response->getReasonPhrase());
+        }else {
+            $fornecedor->id_usuario = $user;
+            $fornecedor->razao_social = $dados['nome'];
+            $fornecedor->atividade_principal = $dados['atividade_principal'][0]['text'];
+            $fornecedor->save();
+            return redirect('/fornecedor')->with('success', 'Fornecedor Cadastrado com Sucesso');
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Fornecedor  $fornecedor
+     * @param \App\Fornecedor $fornecedor
      * @return \Illuminate\Http\Response
      */
     public function show(Fornecedor $fornecedor)
@@ -73,7 +72,7 @@ class FornecedorController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Fornecedor  $fornecedor
+     * @param \App\Fornecedor $fornecedor
      * @return \Illuminate\Http\Response
      */
     public function edit(Fornecedor $fornecedor)
@@ -84,8 +83,8 @@ class FornecedorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Fornecedor  $fornecedor
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Fornecedor $fornecedor
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Fornecedor $fornecedor)
@@ -96,7 +95,7 @@ class FornecedorController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Fornecedor  $fornecedor
+     * @param \App\Fornecedor $fornecedor
      * @return \Illuminate\Http\Response
      */
     public function destroy(Fornecedor $fornecedor)

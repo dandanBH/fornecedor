@@ -2,6 +2,23 @@
 
 @section('content')
     <div class="container">
+        @if (\Session::has('erroMensagem'))
+            <div class="alert alert-danger">
+                    <label>{!! \Session::get('erroMensagem') !!}</label>
+            </div>
+        @endif
+            @if (\Session::has('erroAPI'))
+                <div class="alert alert-danger">
+                    <label>{!! \Session::get('erroAPI') !!}</label>
+                </div>
+            @endif
+
+            @if (\Session::has('success'))
+                <div class="alert alert-success">
+                    <label>{!! \Session::get('success') !!}</label>
+                </div>
+            @endif
+
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
