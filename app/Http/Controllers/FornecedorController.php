@@ -14,8 +14,9 @@ class FornecedorController extends Controller
      */
     public function index()
     {
-        $fornecedor = Fornecedor::latest()->paginate(10);
-        dd($fornecedor);
+        $fornecedores = Fornecedor::latest()->paginate(10);
+       // dd($fornecedor);
+        return view('home',compact('fornecedores'));
         //return view('listar',compact('pessoas'));
     }
 
